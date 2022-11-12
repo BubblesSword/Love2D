@@ -15,14 +15,12 @@ require "levelScene"
 -- //////////// Game Constructor ////////////
 function love.load(arg)
   -- Initialise scenes
-  vecScenes = {} 
+  vecScenes = {}
   vecScenes[1] = CMenuScene:new(nil)
   vecScenes[2] = CLevelScene:new(nil)
   iCurrentScene = 1
 
-  font = love.graphics.newFont(32)
-  centerX = love.graphics.getWidth()/2
-  centerY = love.graphics.getHeight()/2
+  font = love.graphics.newFont(32) 
 end
 
 -- //////////// Update Game ////////////

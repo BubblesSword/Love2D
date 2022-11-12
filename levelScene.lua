@@ -21,7 +21,7 @@ function CLevelScene:new(_obj)
   self.__index = self
   -- world = love.physics.newWorld(0, 9.81 * 64, true)
   -- world:setCallbacks(beginContact, endContact, preSolve, postSolve)
-  player = CPlayer:new(nil, 200, 200)
+  player = CPlayer:new(nil, love.graphics.getWidth()/2, love.graphics.getHeight()/2)
 
   return _obj
 end

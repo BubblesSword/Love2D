@@ -21,16 +21,16 @@ CButton = {
 }
 
 -- //////////// Constructor ////////////
-function CButton:new (_obj, _x, _y, _w, _h, _text)
+function CButton:new (_obj) -- , _x, _y, _w, _h, _text
 _obj = _obj or {}
 setmetatable(_obj, self)
 self.__index = self
-self.vPos =  {x = _x, y = _y}
-self.vScale = {x = _w, y = _h}
-self.bHover = false
-self.bClicked = false
-self.vColour = {r = 0.5, g = 0.5, b = 0.5, a = 1}
-self.strText = _text
+-- self.vPos =  {x = _x, y = _y}
+-- self.vScale = {x = _w, y = _h}
+-- self.bHover = false
+-- self.bClicked = false
+-- self.vColour = {r = 0.5, g = 0.5, b = 0.5, a = 1}
+-- self.strText = _text
 return _obj
 end
 

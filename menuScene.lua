@@ -19,21 +19,16 @@ _obj = _obj or {}
 setmetatable(_obj, self)
 self.__index = self
 
-vecObjects = {}
 playButton = CButton:new({
-  vPos = {x = love.graphics.getWidth()/2, y = love.graphics.getHeight()/2 - 100},
+  vPos = {x = love.graphics.getWidth()/2 - 50, y = love.graphics.getHeight()/2 - 125},
   vScale = {x = 100, y = 50},
-  bHover = false,
-  bClicked = false,
   vColour = {r = 1, g = 1, b = 1, a = 1},
   strText = "PLAY"
 })
 
 quitButton = CButton:new({
-  vPos = {x = love.graphics.getWidth()/2, y = love.graphics.getHeight()/2},
+  vPos = {x = love.graphics.getWidth()/2 - 50, y = love.graphics.getHeight()/2 - 25},
   vScale = {x = 100, y = 50},
-  bHover = false,
-  bClicked = false,
   vColour = {r = 1, g = 1, b = 1, a = 1},
   strText = "QUIT"
 })
@@ -41,20 +36,27 @@ quitButton = CButton:new({
 return _obj
 end
 
+
+-- //////////// Menu Enter ////////////
+function CMenuScene:Enter()
+
+end
+
+-- //////////// Menu Exit ////////////
+function CMenuScene:Exit()
+
+end
+
+
 -- //////////// Menu Update ////////////
 function CMenuScene:Update(dt)
-  -- /// Callback functions///
-  function love.keypressed(key, scancode, isrepeat)
-    if key == "space" then end
-  end
-
-  function love.mousemoved( x, y, dx, dy, istouch )
-    playButton:Update(x, y)
-    quitButton:Update(x, y)
-  end
+  playButton:Update(vMouse.x, vMouse.y)
+  quitButton:Update(vMouse.x, vMouse.y)
 
   if playButton:IsPressed() then
     iCurrentScene = iCurrentScene + 1
+    self.Exit()
+    vecScenes[iCurrentScene]:Enter()
   end
 
   if quitButton:IsPressed() then

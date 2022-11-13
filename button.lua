@@ -16,21 +16,15 @@ CButton = {
   vScale = {x = 200, y = 100},
   bHover = false,
   bClicked = false,
-  vColour = {r = 1, g = 1, b = 1, a = 1},
+  vColour = {r = 0.5, g = 0.5, b = 0.5, a = 0.5},
   strText = ""
 }
 
 -- //////////// Constructor ////////////
-function CButton:new (_obj) -- , _x, _y, _w, _h, _text
+function CButton:new (_obj)
 _obj = _obj or {}
 setmetatable(_obj, self)
 self.__index = self
--- self.vPos =  {x = _x, y = _y}
--- self.vScale = {x = _w, y = _h}
--- self.bHover = false
--- self.bClicked = false
--- self.vColour = {r = 0.5, g = 0.5, b = 0.5, a = 1}
--- self.strText = _text
 return _obj
 end
 

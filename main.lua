@@ -19,12 +19,14 @@ function love.load(arg)
   vecScenes[1] = CMenuScene:new(nil)
   vecScenes[2] = CLevelScene:new(nil)
   iCurrentScene = 1
-
-  font = love.graphics.newFont(32) 
+  bGamePaused = false
+  vMouse = {}
+  font = love.graphics.newFont(32)
 end
 
 -- //////////// Update Game ////////////
 function love.update(dt)
+  vMouse.x, vMouse.y = love.mouse.getPosition()
   vecScenes[iCurrentScene]:Update(dt)
 end
 

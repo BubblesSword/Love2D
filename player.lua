@@ -10,22 +10,29 @@ Author : Joshua Tane
 Mail : Joshua.Tane@mds.ac.nz
 *********************************************--]]
 anim8 = require("anim8-master/anim8")
+require "rigidbody"
 
 CPlayer = {
+  rigidbody,
   vPosition = {x = 0, y = 0},
   fRotation = 0,
   vScale = {x = 0.25, y = 0.25}
 }
 
 -- //////////// Constructor ////////////
-function CPlayer:new (_obj, _x, _y)
+function CPlayer:new (_obj)
 _obj = _obj or {}
 setmetatable(_obj, self)
 self.__index = self
-self.vPosition =  {x = _x, y = _y}
 self.fRotation = 0
 self.vScale = {x = 0.25, y = 0.25}
-CreateAnimation(self.vPosition.x, self.vPosition.y)
+
+self.rigidbody = CRigidbody:new( {
+  body = love.physics.newBody(world, _obj.vPosition.x, _obj.vPosition.y, "dynamic")
+})
+self.rigidbody:AddFixture(love.physics.newCircleShape(20), 1, 0.6)
+
+CreateAnimation(_obj.vPosition.x, _obj.vPosition.y)
 return _obj
 end
 
@@ -45,7 +52,19 @@ end
 
 -- //////////// Player Update ////////////
 function CPlayer:Update(_dt)
+  -- /// Callback functions///
+  function love.keypressed(key, scancode, isrepeat)
+    if key == "space" then
+      self.rigidbody.body:setLinearVelocity(0,0)
+      self.rigidbody.body:applyLinearImpulse(0, -700)
+    end
+    if key == "escape" then
+      bGamePaused = not bGamePaused
+    end
+  end
 
+  self.vPosition.x = self.rigidbody.body:getX()
+  self.vPosition.y = self.rigidbody.body:getY()
   CPlayer.playerSprite.x = self.vPosition.x
   CPlayer.playerSprite.y = self.vPosition.y
   CPlayer.playerSprite.walkGridAnimation:update(_dt)

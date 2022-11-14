@@ -14,7 +14,7 @@ require "pipe"
 CPipeManager = {
   vecPipePool = {},
   fSpeed = 0, -- 2
-  iPipeAmount = 0 -- 5
+  iPipeAmount = 5 -- 5
 }
 
 -- //////////// Constructor ////////////
@@ -23,17 +23,22 @@ _obj = _obj or {}
 setmetatable(_obj, self)
 self.__index = self
 
-for i = 1, self.iPipeAmount + 1, 1 do
+for i = 1, self.iPipeAmount, 1 do
   local newPipe = CPipe:new({
-    vOffset = {x = 0, y = 0},
     fSpeed = self.fSpeed,
-    fGap = 10 * self.fSpeed,
-    iState = 3
+    fOffset = love.graphics.getWidth() + (i + math.random(1, 50))
   })
    self.vecPipePool[#self.vecPipePool + 1] = newPipe
 end
 
 return _obj
+end
+
+-- //////////// Reset all pipes ////////////
+function CPipeManager:Reset()
+  for _, it in ipairs(self.vecPipePool) do
+    it:Reset()
+  end
 end
 
 -- //////////// Manager Update ////////////

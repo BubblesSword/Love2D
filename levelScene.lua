@@ -26,12 +26,14 @@ function CLevelScene:new(_obj)
   bGameOver = false
   iCurrentScore = 0
   currentScoreText = ""
+  levelMusic = love.audio.newSource("Resources/Audio/Nyan Cat.wav", "stream")
+  levelMusic:setLooping(true)
 
   -- Initialise all objects
   vecLevelObjects = {}
   player = CPlayer:new({
-    vPosition = {
-    x = love.graphics.getWidth()/2,
+    vOrigin = {
+    x = love.graphics.getWidth()/2 - 200,
     y = love.graphics.getHeight()/2}
   })
   pipeManager = CPipeManager:new({
@@ -54,23 +56,27 @@ end
 -- //////////// Level Enter ////////////
 function CLevelScene:Enter()
   player.rigidbody.body:setLinearVelocity(0,0)
-  player.rigidbody.body:setX(love.graphics.getWidth()/2)
-  player.rigidbody.body:setY(love.graphics.getHeight()/2)
+  player.rigidbody.body:setX(player.vOrigin.x)
+  player.rigidbody.body:setY(player.vOrigin.y)
+  levelMusic:play()
+  pipeManager:Reset()
+
 end
 
 -- //////////// Level Exit ////////////
 function CLevelScene:Exit()
   bGamePaused = false
   bGameOver = false
+  levelMusic:stop()
   if iCurrentScore > iHighScore then
     iHighScore = iCurrentScore
+    iCurrentScore = 0
   end
 end
 
 -- //////////// Level Update ////////////
 function CLevelScene:Update(_dt)
   if bGamePaused or bGameOver then
-    currentScoreText = "SCORE " .. iCurrentScore
     menuButton:Update(vMouse.x, vMouse.y)
     if menuButton:IsPressed() then
       iCurrentScene = iCurrentScene - 1
@@ -78,6 +84,9 @@ function CLevelScene:Update(_dt)
       vecScenes[iCurrentScene]:Enter()
     end
     return nil
+  else
+    currentScoreText = "SCORE " .. math.floor(iCurrentScore)
+    iCurrentScore = iCurrentScore + _dt
   end
 
   -- Update all objects
@@ -86,7 +95,7 @@ function CLevelScene:Update(_dt)
   end
 
 
-  if player.vPosition.y > love.graphics.getHeight() or  player.vPosition.y < 0 then
+  if player.rigidbody.body:getX() < 10 or player.rigidbody.body:getY() > love.graphics.getHeight() or  player.rigidbody.body:getY() < 0 then
     bGameOver = true
   end
 
@@ -101,14 +110,18 @@ function CLevelScene:Render()
     it:Render()
   end
 
+-- render score
+  love.graphics.print(currentScoreText,
+  love.graphics.getWidth()/2 - font:getWidth(currentScoreText)/2,
+  10)
+
+-- render game over
   if bGameOver then
     menuButton:Render()
     love.graphics.print("GAME OVER",
     love.graphics.getWidth()/2 - font:getWidth("GAME OVER")/2,
-    100)
-    love.graphics.print(currentScoreText,
-    love.graphics.getWidth()/2 - font:getWidth(currentScoreText)/2,
-    love.graphics.getHeight()/2 - font:getHeight(currentScoreText)/2)
+    love.graphics.getHeight()/2 - font:getHeight("GAME OVER")/2)
+    -- render back button
   elseif bGamePaused then
     menuButton:Render()
   end

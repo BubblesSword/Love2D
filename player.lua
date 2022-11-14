@@ -14,7 +14,7 @@ require "rigidbody"
 
 CPlayer = {
   rigidbody,
-  vPosition = {x = 0, y = 0},
+  vOrigin = {x = 0, y = 0},
   fRotation = 0,
   vScale = {x = 0.25, y = 0.25}
 }
@@ -28,11 +28,11 @@ self.fRotation = 0
 self.vScale = {x = 0.25, y = 0.25}
 
 self.rigidbody = CRigidbody:new( {
-  body = love.physics.newBody(world, _obj.vPosition.x, _obj.vPosition.y, "dynamic")
+  body = love.physics.newBody(world, _obj.vOrigin.x, _obj.vOrigin.y, "dynamic")
 })
 self.rigidbody:AddFixture(love.physics.newCircleShape(20), 1, 0.6)
 
-CreateAnimation(_obj.vPosition.x, _obj.vPosition.y)
+CreateAnimation(_obj.vOrigin.x, _obj.vOrigin.y)
 return _obj
 end
 
@@ -63,10 +63,8 @@ function CPlayer:Update(_dt)
     end
   end
 
-  self.vPosition.x = self.rigidbody.body:getX()
-  self.vPosition.y = self.rigidbody.body:getY()
-  CPlayer.playerSprite.x = self.vPosition.x
-  CPlayer.playerSprite.y = self.vPosition.y
+  CPlayer.playerSprite.x = self.rigidbody.body:getX()
+  CPlayer.playerSprite.y = self.rigidbody.body:getY()
   CPlayer.playerSprite.walkGridAnimation:update(_dt)
 end
 

@@ -33,13 +33,16 @@ quitButton = CButton:new({
   strText = "QUIT"
 })
 
+iHighScore = 0
+highScoreText = "HIGHSCORE"
+
 return _obj
 end
 
 
 -- //////////// Menu Enter ////////////
 function CMenuScene:Enter()
-
+  highScoreText = "HIGHSCORE " .. iHighScore
 end
 
 -- //////////// Menu Exit ////////////
@@ -49,7 +52,7 @@ end
 
 
 -- //////////// Menu Update ////////////
-function CMenuScene:Update(dt)
+function CMenuScene:Update(_dt)
   playButton:Update(vMouse.x, vMouse.y)
   quitButton:Update(vMouse.x, vMouse.y)
 
@@ -69,6 +72,7 @@ end
 function CMenuScene:Render()
   playButton:Render()
   quitButton:Render()
+  love.graphics.print(highScoreText, love.graphics.getWidth()/2 - font:getWidth(highScoreText)/2, 100)
 end
 
 return CMenuScene;

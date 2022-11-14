@@ -11,6 +11,7 @@ Mail : Joshua.Tane@mds.ac.nz
 *********************************************--]]
 require "player"
 require "button"
+require "pipesManager"
 
 CLevelScene = {}
 
@@ -22,6 +23,10 @@ function CLevelScene:new(_obj)
   world = love.physics.newWorld(0, 9.81 * 64, true)
   world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
+  bGameOver = false
+  iCurrentScore = 0
+  currentScoreText = ""
+
   -- Initialise all objects
   vecLevelObjects = {}
   player = CPlayer:new({
@@ -29,8 +34,12 @@ function CLevelScene:new(_obj)
     x = love.graphics.getWidth()/2,
     y = love.graphics.getHeight()/2}
   })
-
+  pipeManager = CPipeManager:new({
+      fSpeed = 2,
+      iPipeAmount = 5
+  })
   vecLevelObjects[1] = player
+  vecLevelObjects[2] = pipeManager
 
   menuButton = CButton:new({
     vPos = {x = 10, y = 10},
@@ -52,12 +61,16 @@ end
 -- //////////// Level Exit ////////////
 function CLevelScene:Exit()
   bGamePaused = false
-
+  bGameOver = false
+  if iCurrentScore > iHighScore then
+    iHighScore = iCurrentScore
+  end
 end
 
 -- //////////// Level Update ////////////
-function CLevelScene:Update(dt)
-  if bGamePaused then
+function CLevelScene:Update(_dt)
+  if bGamePaused or bGameOver then
+    currentScoreText = "SCORE " .. iCurrentScore
     menuButton:Update(vMouse.x, vMouse.y)
     if menuButton:IsPressed() then
       iCurrentScene = iCurrentScene - 1
@@ -69,11 +82,16 @@ function CLevelScene:Update(dt)
 
   -- Update all objects
   for _, it in ipairs(vecLevelObjects) do
-    it:Update(dt)
+    it:Update(_dt)
+  end
+
+
+  if player.vPosition.y > love.graphics.getHeight() or  player.vPosition.y < 0 then
+    bGameOver = true
   end
 
   -- Update world
-  world:update(dt)
+  world:update(_dt)
 end
 
 -- //////////// Level Render ////////////
@@ -83,7 +101,15 @@ function CLevelScene:Render()
     it:Render()
   end
 
-  if bGamePaused then
+  if bGameOver then
+    menuButton:Render()
+    love.graphics.print("GAME OVER",
+    love.graphics.getWidth()/2 - font:getWidth("GAME OVER")/2,
+    100)
+    love.graphics.print(currentScoreText,
+    love.graphics.getWidth()/2 - font:getWidth(currentScoreText)/2,
+    love.graphics.getHeight()/2 - font:getHeight(currentScoreText)/2)
+  elseif bGamePaused then
     menuButton:Render()
   end
 
